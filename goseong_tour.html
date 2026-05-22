@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>칠원 구성지구 마을투어</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#F7F6F3;--bg2:#EFEDE9;--bg3:#E8E5E0;--border:#D9D5CE;--border2:#C8C3BA;--text:#1A1916;--text2:#6B6760;--text3:#9A9690;--green:#1D9E75;--green-light:#E1F5EE;--green-dark:#0F6E56;--red:#A32D2D;--red-light:#FCEBEB;--amber:#854F0B;--amber-light:#FAEEDA;--blue:#185FA5;--blue-light:#E6F1FB;--radius:6px;--radius-lg:10px;}
+body{font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;}
+#app{display:flex;height:100vh;}
+#sidebar{width:268px;min-width:268px;background:white;border-right:1px solid var(--border);display:flex;flex-direction:column;box-shadow:2px 0 8px rgba(0,0,0,.04);}
+#sh{padding:16px;border-bottom:1px solid var(--border);}
+#sh h1{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;display:flex;align-items:center;gap:6px;}
+#sh h1 i{color:var(--green);font-size:16px;}
+#sh p{font-size:11px;color:var(--text2);}
+.tab-row{display:flex;border-bottom:1px solid var(--border);}
+.tab-btn{flex:1;padding:9px 4px;font-size:11px;font-weight:500;border:none;background:transparent;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green);background:var(--bg);}
+#sb{flex:1;overflow-y:auto;}
+#sb::-webkit-scrollbar{width:4px;}
+#sb::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.course-card{padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;position:relative;}
+.course-card:hover{background:var(--bg);}
+.course-card.active{background:var(--green-light);}
+.cn{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;padding-right:24px;line-height:1.3;}
+.cm{font-size:10px;color:var(--text2);}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:500;margin-bottom:5px;}
+.b-turtle{background:var(--amber-light);color:var(--amber);}
+.b-31{background:#FAECE7;color:#993C1D;}
+.b-bigak{background:var(--green-light);color:var(--green-dark);}
+.b-new31{background:#FAECE7;color:#7F3318;}
+.b-hyo{background:var(--blue-light);color:var(--blue);}
+.b-custom{background:var(--bg2);color:var(--text2);}
+.new-tag{font-size:9px;padding:1px 6px;background:#FAC775;color:#633806;border-radius:3px;margin-left:4px;font-weight:500;}
+.hub-tag{font-size:9px;padding:1px 5px;background:var(--green-light);color:var(--green-dark);border-radius:3px;margin-left:4px;}
+.cdel{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;border:1px solid var(--border);background:white;color:var(--text2);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;}
+.course-card:hover .cdel{opacity:1;}
+.cdel:hover{background:var(--red-light);color:var(--red);border-color:#F09595;}
+.spot-item{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;position:relative;}
+.spot-item:hover{background:var(--bg);}
+.spot-item.active{background:var(--green-light);}
+.spot-item.is-hub{border-left:3px solid var(--green);}
+.snum{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;color:white;}
+.sinfo{flex:1;min-width:0;}
+.sname{font-size:12px;font-weight:500;color:var(--text);line-height:1.3;}
+.stype{font-size:10px;color:var(--text2);margin-top:1px;}
+.sord{display:flex;flex-direction:column;gap:1px;flex-shrink:0;}
+.sord button{width:16px;height:14px;border:1px solid var(--border);background:white;border-radius:3px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);}
+.sord button:hover{background:var(--bg2);}
+.sdel{width:18px;height:18px;border-radius:50%;border:1px solid var(--border);background:white;color:var(--text2);font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0;transition:opacity .15s;}
+.spot-item:hover .sdel{opacity:1;}
+.sdel:hover{background:var(--red-light);color:var(--red);border-color:#F09595;}
+.add-btn{display:flex;align-items:center;gap:6px;width:calc(100% - 28px);margin:10px 14px;padding:8px 10px;border:1.5px dashed var(--border);border-radius:var(--radius);background:transparent;font-size:11px;color:var(--text2);cursor:pointer;transition:all .12s;}
+.add-btn:hover{background:var(--bg2);color:var(--text);}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+#mh{padding:12px 16px;background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+#mh h2{font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.abtn{padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius);background:white;font-size:11px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;font-family:inherit;transition:all .12s;}
+.abtn:hover{background:var(--bg2);}
+.abtn.primary{background:var(--green);color:white;border-color:var(--green);}
+.abtn.primary:hover{background:var(--green-dark);}
+.abtn.danger{color:var(--red);border-color:#F09595;}
+.abtn.danger:hover{background:var(--red-light);}
+#ca{flex:1;display:flex;overflow:hidden;}
+#map-panel{flex:1;background:var(--bg2);position:relative;overflow:hidden;min-width:0;}
+#map-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--text2);font-size:12px;line-height:2;pointer-events:none;z-index:1;}
+#map-ph i{font-size:40px;margin-bottom:8px;color:var(--border2);}
+#map-container{width:100%;height:100%;}
+#api-ok{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:white;border:1px solid var(--border);border-radius:var(--radius);padding:7px 14px;font-size:11px;color:var(--green);display:none;align-items:center;gap:6px;white-space:nowrap;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+#dp{width:316px;min-width:316px;background:white;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;box-shadow:-2px 0 8px rgba(0,0,0,.04);}
+#dh{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+#dh h3{font-size:13px;font-weight:600;flex:1;}
+#db{flex:1;overflow-y:auto;padding:14px;}
+#db::-webkit-scrollbar{width:4px;}
+#db::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.fl{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;}
+.fv{font-size:12px;color:var(--text);line-height:1.65;}
+.fg{margin-bottom:14px;}
+.fi{width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;color:var(--text);background:var(--bg);font-family:inherit;transition:border-color .15s;}
+.fi:focus{outline:none;border-color:var(--green);}
+.fta{width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:var(--radius);font-size:12px;color:var(--text);background:var(--bg);font-family:inherit;resize:vertical;min-height:80px;line-height:1.65;transition:border-color .15s;}
+.fta:focus{outline:none;border-color:var(--green);}
+.addr-row{display:flex;gap:6px;align-items:center;}
+.addr-row .fi{flex:1;}
+.addr-search-btn{padding:7px 10px;border:1px solid var(--green);border-radius:var(--radius);background:var(--green);color:white;font-size:11px;cursor:pointer;white-space:nowrap;font-family:inherit;display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.addr-search-btn:hover{background:var(--green-dark);}
+.addr-result{margin-top:6px;padding:7px 9px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);font-size:11px;color:var(--text2);display:none;}
+.addr-result.show{display:block;}
+.addr-result.ok{color:var(--green-dark);border-color:var(--green);}
+.addr-result.err{color:var(--red);border-color:#F09595;}
+.tag-row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;}
+.tag{font-size:10px;padding:3px 8px;border-radius:99px;background:var(--bg2);color:var(--text2);display:flex;align-items:center;gap:4px;}
+.tag-del{cursor:pointer;color:var(--text3);font-size:11px;border:none;background:none;padding:0;line-height:1;}
+.tag-del:hover{color:var(--red);}
+.tag-add-row{display:flex;gap:6px;margin-top:7px;}
+.tag-add-row input{flex:1;padding:5px 8px;border:1px solid var(--border);border-radius:var(--radius);font-size:11px;background:var(--bg);color:var(--text);font-family:inherit;}
+.tag-add-row input:focus{outline:none;border-color:var(--green);}
+.tag-add-row button{padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:11px;background:white;cursor:pointer;font-family:inherit;}
+.tag-add-row button:hover{background:var(--bg2);}
+.mission-box{background:var(--amber-light);border-radius:var(--radius);padding:9px 11px;font-size:11px;color:#633806;margin-bottom:8px;line-height:1.6;display:flex;gap:7px;align-items:flex-start;}
+.hub-box{background:var(--green-light);border-radius:var(--radius);padding:8px 11px;font-size:11px;color:var(--green-dark);margin-bottom:12px;display:flex;align-items:center;gap:7px;font-weight:500;}
+.empty-s{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:12px;gap:10px;}
+.empty-s i{font-size:32px;}
+.kr{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--border);align-items:center;background:var(--bg);}
+.kr input{flex:1;font-size:11px;padding:6px 9px;border:1px solid var(--border);border-radius:var(--radius);background:white;color:var(--text);font-family:inherit;}
+.kr input:focus{outline:none;border-color:var(--green);}
+.color-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px;}
+.color-chip{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:border-color .15s;}
+.color-chip.selected{border-color:var(--text);}
+.flow-wrap{display:flex;flex-direction:column;}
+.flow-item{display:flex;align-items:flex-start;gap:9px;padding:4px 0;}
+.flow-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.flow-line{width:1px;height:10px;background:var(--border);margin-left:4px;}
+.flow-name{font-size:11px;color:var(--text);line-height:1.4;}
+.flow-sub{font-size:10px;color:var(--text2);margin-top:1px;}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.ob{background:white;border-radius:var(--radius-lg);padding:22px 24px;max-width:300px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.15);}
+.ob h4{font-size:14px;font-weight:600;margin-bottom:8px;}
+.ob p{font-size:12px;color:var(--text2);margin-bottom:18px;line-height:1.6;}
+.ob-btns{display:flex;gap:8px;justify-content:flex-end;}
+.coord-display{font-size:10px;color:var(--text3);margin-top:4px;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="sidebar">
+    <div id="sh">
+      <h1><i class="ti ti-map-pin"></i> 칠원 구성지구 마을투어</h1>
+      <p>도시재생 마을해설사 코스 관리 시스템</p>
+    </div>
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchTab('courses')" id="tc">코스</button>
+      <button class="tab-btn" onclick="switchTab('spots')" id="ts">지점</button>
+    </div>
+    <div id="sb">
+      <div id="course-list"></div>
+      <div id="spot-list" style="display:none;"></div>
+    </div>
+    <button class="add-btn" onclick="handleAdd()">
+      <i class="ti ti-plus"></i><span id="al">코스 추가</span>
+    </button>
+  </div>
+  <div id="main">
+    <div id="mh">
+      <h2 id="mt">코스를 선택하세요</h2>
+      <button class="abtn" onclick="toggleEdit()" id="eb" style="display:none;"><i class="ti ti-edit"></i> 편집</button>
+      <button class="abtn primary" onclick="saveEdit()" id="sb2" style="display:none;"><i class="ti ti-check"></i> 저장</button>
+      <button class="abtn danger" onclick="confDelC2()" id="db2" style="display:none;"><i class="ti ti-trash"></i> 삭제</button>
+      <button class="abtn" onclick="exportData()" id="exp-btn" style="margin-left:auto;"><i class="ti ti-download"></i> 내보내기</button>
+      <label class="abtn" style="cursor:pointer;"><i class="ti ti-upload"></i> 가져오기<input type="file" id="imp-input" accept=".json" style="display:none;" onchange="importData(this)"></label>
+    </div>
+    <div id="ca">
+      <div id="map-panel">
+        <div id="map-ph">
+          <i class="ti ti-map"></i>
+          칠원 구성지구<br>하단에 카카오맵 앱 키 입력 후<br>적용 버튼을 눌러주세요
+        </div>
+        <div id="map-container"></div>
+        <div id="api-ok"><i class="ti ti-check"></i> 카카오맵 연결됨</div>
+      </div>
+      <div id="dp">
+        <div id="dh"><h3 id="dtitle">상세 정보</h3><button class="abtn" onclick="closeDetail()" id="closeb" style="display:none;"><i class="ti ti-x"></i></button></div>
+        <div id="db">
+          <div class="empty-s" id="es"><i class="ti ti-hand-click"></i><span>코스 또는 지점을 선택하세요</span></div>
+          <div id="dc" style="display:none;"></div>
+        </div>
+        <div class="kr">
+          <input type="text" id="kk" placeholder="카카오맵 JavaScript 앱 키 입력"/>
+          <button class="abtn" onclick="applyKey()">적용</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const COLORS=['#D85A30','#993C1D','#1D9E75','#378ADD','#7F77DD','#BA7517','#639922','#888780'];
+const DATA={courses:[
+  {id:'turtle',name:'거북성 보물길',badge:'b-turtle',badgeText:'자연·역사',color:'#D85A30',isNew:false,
+   desc:'구성지구의 읍성과 함께 마을의 역사를 배우며 자연 속에서 보물을 찾아보는 60분 코스',
+   duration:'약 60분',distance:'약 1.2km',difficulty:'쉬움',theme:'자연·역사·거북이',
+   spots:[
+    {id:'t1',name:'혜휼각',type:'비각·역사',color:'#D85A30',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'성주 주씨 주시성이 춘궁기에 곡식을 빌려주고 수확기에 돌려받는 방식으로 마을을 도왔던 것을 기리는 비각. 기둥을 받치는 거북이 조각.',duration:'15분',mission:'혜휼각 기둥을 받치는 거북이를 찾아보세요 (몇 마리?)',keywords:['혜휼','주시성','거북이']},
+    {id:'t2',name:'괴정지신 (할매 당산나무)',type:'당산나무·마을신앙',color:'#D85A30',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'500~600년 수령 회화나무. 학자수 나무로 과거시험 전 기도 장소. 정월대보름 마을 안녕 기원.',duration:'10분',mission:'시험을 앞둔 분이 있다면 괴정지신에 메시지 달기',keywords:['괴정지신','회화나무','학자수']},
+    {id:'t3',name:'칠원시장',type:'전통시장',color:'#D85A30',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 칠원시장',isHub:false,desc:'3일·8일 오일장. 1919년 4회 독립만세운동 현장.',duration:'10분',mission:null,keywords:['칠원시장','오일장']},
+    {id:'t4',name:'구) 마을 빨래터',type:'커뮤니티·역사',color:'#D85A30',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'예전 커뮤니티 장소. 현재 주차장.',duration:'15분',mission:null,keywords:['빨래터','커뮤니티']},
+    {id:'t5',name:'칠원초등학교',type:'근대교육·역사',color:'#D85A30',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 칠원초등학교',isHub:false,desc:'1906년 설립. 손양원 목사 모교.',duration:'10분',mission:null,keywords:['1906년','손양원']},
+    {id:'t6',name:'거북이성 문화센터',type:'마을시설',color:'#D85A30',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'거북이성 문화센터.',duration:'10분',mission:null,keywords:['거북이성','문화센터']},
+  ]},
+  {id:'sam31',name:'구성지구 3·1운동 코스',badge:'b-31',badgeText:'독립운동',color:'#993C1D',isNew:false,
+   desc:'구성지구의 3·1만세운동과 손양원 목사, 손종일 장로에 대해 배워보는 60분 코스',
+   duration:'약 60분',distance:'약 1.5km',difficulty:'쉬움',theme:'3·1운동·독립운동',
+   spots:[
+    {id:'s1',name:'칠원초등학교',type:'역사적 출발점',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 칠원초등학교',isHub:false,desc:'함안 3·1운동 역사적 출발점. 손양원 목사 모교.',duration:'15분',mission:null,keywords:['손양원','신사참배']},
+    {id:'s2',name:'칠원시장 (3·1만세운동 현장)',type:'만세운동 현장',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 칠원시장',isHub:false,desc:'칠원 장날의거. 1919년 총 4회. 손종일 장로: 독립선언서 입수 → 태극기 배포.',duration:'15분',mission:'태극기 들고 만세 삼창!',keywords:['손종일','태극기']},
+    {id:'s3',name:'구) 마을 빨래터',type:'커뮤니티·역사',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'현재 주차장. 독립운동 소통·협력의 거점.',duration:'10분',mission:null,keywords:['빨래터']},
+    {id:'s4',name:'괴정지신 (할매 당산나무)',type:'당산나무',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'5~600년 회화나무.',duration:'10분',mission:'메시지 달기',keywords:['회화나무']},
+    {id:'s5',name:'코스모스동산',type:'마을명소',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'예전 주민들이 강강술래 하던 곳. 현재 코스모스 공원.',duration:'10분',mission:null,keywords:['코스모스']},
+  ]},
+  {id:'bigak',name:'구성지구 비각(碑閣) 코스',badge:'b-bigak',badgeText:'비각·효',color:'#1D9E75',isNew:false,
+   desc:'구성지구 마을 곳곳에 숨어있는 비각들을 따라가며 그 속에 담긴 이야기를 찾아가보는 60분 코스',
+   duration:'약 60분',distance:'약 2.0km',difficulty:'쉬움',theme:'비각·효·역사',
+   spots:[
+    {id:'b1',name:'혜휼각',type:'비각·효',color:'#1D9E75',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'주시성: 재산 3등분. 마을사람들이 직접 세운 혜휼비.',duration:'15분',mission:null,keywords:['혜휼각','주시성']},
+    {id:'b2',name:'칠원읍성터',type:'역사유적',color:'#1D9E75',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'주민들이 칠원읍성처럼 아끼는 돌담.',duration:'15분',mission:null,keywords:['칠원읍성']},
+    {id:'b3',name:'칠원시장',type:'역사현장',color:'#1D9E75',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 칠원시장',isHub:false,desc:'경남 최초·최대 3·1 독립운동 현장 4회.',duration:'10분',mission:null,keywords:['칠원시장']},
+    {id:'b4',name:'칠원 고을 줄다리기',type:'전통민속',color:'#1D9E75',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'2005년 복원. 줄 130m·40ton·3천명.',duration:'10분',mission:null,keywords:['줄다리기']},
+    {id:'b5',name:'새발자국화석산지',type:'자연유산',color:'#1D9E75',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 용산리',isHub:false,desc:'선사시대 새발자국 화석산지.',duration:'10분',mission:null,keywords:['화석','선사시대']},
+    {id:'b6',name:'칠원향교',type:'유교교육기관',color:'#1D9E75',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 칠원향교',isHub:false,desc:'향교=국립대, 서원=사립대.',duration:'15분',mission:'퀴즈: 혜휼각·정려각의 차이는?',keywords:['향교','유교']},
+  ]},
+  {id:'new31',name:'3·1운동 길',badge:'b-new31',badgeText:'신규·독립운동',color:'#993C1D',isNew:true,
+   desc:'손양원 목사·손종일 장로의 발자취를 따라 거점지역에서 출발하는 신규 스토리텔링 코스',
+   duration:'미정',distance:'미정',difficulty:'쉬움',theme:'3·1운동·스토리텔링',
+   spots:[
+    {id:'n0',name:'거점지역 (구 우체국)',type:'출발·거점',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:true,desc:'칠원 구성지구 도시재생 거점지역 (구 우체국 자리). 코스 출발점.',duration:'5분',mission:null,keywords:['거점','출발']},
+    {id:'n1',name:'손양원 기념관',type:'기념관·역사',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 산돌손양원기념관',isHub:false,desc:'사랑의 원자탄으로 불린 손양원 목사 기념관.',duration:'미정',mission:null,keywords:['손양원','기념관']},
+    {id:'n2',name:'손양원 목사 생가터',type:'생가터·역사',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'손양원 목사(1902~1950)가 태어난 생가터.',duration:'미정',mission:null,keywords:['손양원','생가터']},
+    {id:'n3',name:'칠원초등학교',type:'근대교육·독립운동',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 칠원초등학교',isHub:false,desc:'1906년 설립. 손양원 목사 모교.',duration:'미정',mission:null,keywords:['칠원초','손양원']},
+    {id:'n4',name:'칠원시장',type:'만세운동 현장',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 칠원시장',isHub:false,desc:'1919년 칠원 장날의거 현장.',duration:'미정',mission:'태극기 들고 만세 삼창!',keywords:['칠원시장','손종일']},
+    {id:'n5',name:'거점지역 (구 우체국)',type:'도착·마무리',color:'#993C1D',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:true,desc:'코스 마무리 지점.',duration:'10분',mission:'퀴즈 진행 및 소감 나눔',keywords:['거점','마무리']},
+  ]},
+  {id:'hyo',name:'효·마을 역사길',badge:'b-hyo',badgeText:'신규·효·역사',color:'#378ADD',isNew:true,
+   desc:'비각과 당산나무에 깃든 효 정신과 마을 공동체의 역사를 탐방하는 신규 코스',
+   duration:'미정',distance:'미정',difficulty:'쉬움',theme:'효·마을역사·비각',
+   spots:[
+    {id:'h1',name:'수풍각 & 순화각',type:'효자각',color:'#378ADD',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'수풍각: 효자 김상욱. 순화각: 효자 김창직.',duration:'미정',mission:null,keywords:['수풍각','순화각']},
+    {id:'h2',name:'칠원 고을 줄다리기',type:'전통민속',color:'#378ADD',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'2005년 복원. 3월 매년 3천 명 참가.',duration:'미정',mission:null,keywords:['줄다리기']},
+    {id:'h3',name:'돈풍각 & 비석군',type:'정려각·치적비',color:'#378ADD',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'돈풍각: 효자 권상찬 정려각. 비석군: 칠원현감 18개 치적비.',duration:'미정',mission:null,keywords:['돈풍각','비석군']},
+    {id:'h4',name:'거점지역 (구 우체국)',type:'중간 거점',color:'#378ADD',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:true,desc:'코스 중간 거점 (구 우체국 자리).',duration:'5분',mission:null,keywords:['거점']},
+    {id:'h5',name:'마을 당산나무 (괴정지신)',type:'당산나무·마을신앙',color:'#378ADD',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'500~600년 수령 회화나무(괴정지신).',duration:'미정',mission:'소원 빌기 & 메시지 달기',keywords:['당산나무','괴정지신']},
+    {id:'h6',name:'혜휼각',type:'비각·효·마을공동체',color:'#378ADD',lat:0,lng:0,addr:'경상남도 함안군 칠원읍 구성리',isHub:false,desc:'주시성의 이야기. 마을사람들이 직접 세운 비각.',duration:'미정',mission:null,keywords:['혜휼각','주시성']},
+  ]},
+]};
+
+let cc=null,cs=null,tab='courses',em=false,kl=false,km=null,mkrs=[];
+let geocoder=null;
+
+
+// ── 내보내기 / 가져오기 ──
+function exportData(){
+  const json=JSON.stringify(DATA,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const now=new Date();
+  const ts=`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+  a.href=url; a.download=`구성지구_마을투어_${ts}.json`;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function importData(input){
+  const file=input.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    try{
+      const imported=JSON.parse(e.target.result);
+      if(!imported.courses||!Array.isArray(imported.courses)){
+        alert('올바른 형식의 파일이 아닙니다.');return;
+      }
+      DATA.courses=imported.courses;
+      cc=null; cs=null; em=false;
+      document.getElementById('mt').textContent='코스를 선택하세요';
+      ['eb','sb2','db2'].forEach(i=>document.getElementById(i).style.display='none');
+      document.getElementById('es').style.display='';
+      document.getElementById('dc').style.display='none';
+      document.getElementById('closeb').style.display='none';
+      rl(); rsl();
+      if(kl&&km) updateMap();
+      alert(`✓ 가져오기 완료! 코스 ${DATA.courses.length}개 불러왔습니다.`);
+    }catch(err){
+      alert('파일을 읽는 중 오류가 발생했습니다.\n' + err.message);
+    }
+    input.value='';
+  };
+  reader.readAsText(file,'utf-8');
+}
+
+function init(){rl();}
+
+function rl(){
+  document.getElementById('course-list').innerHTML=DATA.courses.map(c=>`
+    <div class="course-card ${cc&&cc.id===c.id?'active':''}" onclick="selCourse('${c.id}')">
+      <span class="badge ${c.badge}">${c.badgeText}</span>${c.isNew?'<span class="new-tag">신규</span>':''}
+      <div class="cn">${c.name}</div>
+      <div class="cm">${c.spots.length}개 지점 · ${c.duration}</div>
+      <button class="cdel" onclick="event.stopPropagation();confDelC('${c.id}')"><i class="ti ti-x"></i></button>
+    </div>`).join('');
+}
+
+function rsl(){
+  const el=document.getElementById('spot-list');
+  if(!cc){el.innerHTML='<div style="padding:14px;font-size:12px;color:var(--text2);text-align:center;">코스를 먼저 선택하세요</div>';return;}
+  if(!cc.spots.length){el.innerHTML='<div style="padding:14px;font-size:12px;color:var(--text2);text-align:center;">지점을 추가하세요</div>';return;}
+  el.innerHTML=cc.spots.map((s,i)=>`
+    <div class="spot-item ${cs&&cs.id===s.id?'active':''} ${s.isHub?'is-hub':''}" onclick="selSpot('${s.id}')">
+      <div class="snum" style="background:${s.isHub?'#1D9E75':s.color}">${i+1}</div>
+      <div class="sinfo">
+        <div class="sname">${s.name}${s.isHub?'<span class="hub-tag">거점</span>':''}</div>
+        <div class="stype">${s.addr||s.type}</div>
+      </div>
+      <div class="sord">
+        <button onclick="event.stopPropagation();moveSpot('${s.id}',-1)"><i class="ti ti-chevron-up"></i></button>
+        <button onclick="event.stopPropagation();moveSpot('${s.id}',1)"><i class="ti ti-chevron-down"></i></button>
+      </div>
+      <button class="sdel" onclick="event.stopPropagation();confDelS('${s.id}')"><i class="ti ti-x"></i></button>
+    </div>`).join('');
+}
+
+function switchTab(t){
+  tab=t;
+  document.getElementById('course-list').style.display=t==='courses'?'':'none';
+  document.getElementById('spot-list').style.display=t==='spots'?'':'none';
+  document.getElementById('tc').classList.toggle('active',t==='courses');
+  document.getElementById('ts').classList.toggle('active',t==='spots');
+  document.getElementById('al').textContent=t==='courses'?'코스 추가':'지점 추가';
+  if(t==='spots')rsl();
+}
+
+function selCourse(id){
+  cc=DATA.courses.find(c=>c.id===id);cs=null;em=false;
+  rl();rsl();
+  document.getElementById('mt').textContent=cc.name;
+  document.getElementById('eb').style.display='';
+  document.getElementById('sb2').style.display='none';
+  document.getElementById('db2').style.display='';
+  showCD();updateMap();
+}
+
+function selSpot(id){
+  cs=cc.spots.find(s=>s.id===id);rsl();showSD();
+  if(kl&&km&&cs&&cs.lat&&cs.lng) km.setCenter(new kakao.maps.LatLng(cs.lat,cs.lng));
+}
+
+function showCD(){
+  const c=cc; show();
+  document.getElementById('dtitle').textContent='코스 정보';
+  document.getElementById('dc').innerHTML=`
+    <div class="fg"><div class="fl">코스명</div>
+      ${em?`<input class="fi" id="e-name" value="${esc(c.name)}">`:`<div class="fv" style="font-weight:600;">${c.name}${c.isNew?' <span class="new-tag">신규</span>':''}</div>`}</div>
+    <div class="fg"><div class="fl">설명</div>
+      ${em?`<textarea class="fta" id="e-desc">${esc(c.desc)}</textarea>`:`<div class="fv">${c.desc||'—'}</div>`}</div>
+    <div class="fg"><div class="fl">소요 시간</div>
+      ${em?`<input class="fi" id="e-dur" value="${esc(c.duration)}">`:`<div class="fv">${c.duration}</div>`}</div>
+    <div class="fg"><div class="fl">거리</div>
+      ${em?`<input class="fi" id="e-dist" value="${esc(c.distance)}">`:`<div class="fv">${c.distance}</div>`}</div>
+    <div class="fg"><div class="fl">테마</div>
+      ${em?`<input class="fi" id="e-theme" value="${esc(c.theme)}">`:`<div class="fv">${c.theme||'—'}</div>`}</div>
+    ${em?`<div class="fg"><div class="fl">코스 색상</div><div class="color-row">${COLORS.map(col=>`<div class="color-chip ${c.color===col?'selected':''}" style="background:${col}" onclick="pickColor('${col}')"></div>`).join('')}</div></div>`:''}
+    <div class="fg"><div class="fl">코스 흐름</div>
+      <div class="flow-wrap">${c.spots.map((s,i)=>`
+        <div class="flow-item">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <div class="flow-dot" style="background:${s.isHub?'#1D9E75':s.color}"></div>
+            ${i<c.spots.length-1?`<div class="flow-line"></div>`:''}
+          </div>
+          <div>
+            <div class="flow-name">${i+1}. ${s.name}${s.isHub?'<span class="hub-tag" style="margin-left:4px;">거점</span>':''}</div>
+            <div class="flow-sub">${s.type} · ${s.duration}</div>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function showSD(){
+  const s=cs; show();
+  document.getElementById('dtitle').textContent='지점 정보';
+  const kws=s.keywords||[];
+  const hasCoord=s.lat&&s.lng;
+  document.getElementById('dc').innerHTML=`
+    ${s.isHub?`<div class="hub-box"><i class="ti ti-home"></i> 공통 거점지역 (구 우체국)</div>`:''}
+    <div class="fg"><div class="fl">지점명</div>
+      ${em?`<input class="fi" id="e-sname" value="${esc(s.name)}">`:`<div class="fv" style="font-weight:600;">${s.name}</div>`}</div>
+    <div class="fg"><div class="fl">유형</div>
+      ${em?`<input class="fi" id="e-stype" value="${esc(s.type)}">`:`<div class="fv">${s.type}</div>`}</div>
+    <div class="fg"><div class="fl">위치 주소</div>
+      ${em?`
+        <div class="addr-row">
+          <input class="fi" id="e-addr" value="${esc(s.addr||'')}" placeholder="주소 입력 후 검색" onkeydown="if(event.key==='Enter')searchAddr()">
+          <button class="addr-search-btn" onclick="searchAddr()"><i class="ti ti-search"></i> 검색</button>
+        </div>
+        <div class="addr-result" id="addr-result">${hasCoord?`✓ 좌표 등록됨 (${s.lat.toFixed(4)}, ${s.lng.toFixed(4)})`:'주소를 입력하고 검색하세요'}</div>
+      `:`
+        <div class="fv">${s.addr||'—'}</div>
+        ${hasCoord?`<div class="coord-display">📍 ${s.lat.toFixed(5)}, ${s.lng.toFixed(5)}</div>`:'<div class="coord-display" style="color:#F09595;">⚠ 좌표 미등록 — 편집 후 주소 검색하세요</div>'}
+      `}
+    </div>
+    <div class="fg"><div class="fl">해설 내용</div>
+      ${em?`<textarea class="fta" id="e-sdesc" style="min-height:110px;">${esc(s.desc)}</textarea>`:`<div class="fv">${s.desc||'—'}</div>`}</div>
+    <div class="fg"><div class="fl">미션</div>
+      ${em?`<textarea class="fta" id="e-smission" style="min-height:48px;" placeholder="미션 없으면 비워두세요">${esc(s.mission||'')}</textarea>`:`${s.mission?`<div class="mission-box"><i class="ti ti-flag"></i><span>${s.mission}</span></div>`:'<div class="fv" style="color:var(--text2);">없음</div>'}`}</div>
+    <div class="fg"><div class="fl">체류 시간</div>
+      ${em?`<input class="fi" id="e-sdur" value="${esc(s.duration)}">`:`<div class="fv">${s.duration}</div>`}</div>
+    <div class="fg"><div class="fl">키워드</div>
+      <div class="tag-row" id="kw-row">${kws.map((k,i)=>`<span class="tag">#${k}${em?`<button class="tag-del" onclick="delKw(${i})">×</button>`:''}</span>`).join('')}</div>
+      ${em?`<div class="tag-add-row"><input id="kw-inp" placeholder="키워드 입력 후 추가" onkeydown="if(event.key==='Enter')addKw()"/><button onclick="addKw()">추가</button></div>`:''}
+    </div>`;
+
+  // 주소 결과 표시
+  if(em){
+    const r=document.getElementById('addr-result');
+    if(r){
+      r.classList.add('show');
+      if(hasCoord){r.classList.add('ok');r.textContent=`✓ 좌표 등록됨 (${s.lat.toFixed(4)}, ${s.lng.toFixed(4)})`;}
+    }
+  }
+}
+
+// 주소 → 좌표 검색
+function searchAddr(){
+  if(!geocoder){alert('카카오맵 API 키를 먼저 적용해주세요.');return;}
+  const inp=document.getElementById('e-addr');
+  if(!inp)return;
+  const addr=inp.value.trim();
+  if(!addr){alert('주소를 입력해주세요.');return;}
+  const r=document.getElementById('addr-result');
+  if(r){r.className='addr-result show';r.textContent='검색 중...';}
+
+  geocoder.addressSearch(addr,(result,status)=>{
+    if(status===kakao.maps.services.Status.OK){
+      const la=parseFloat(result[0].y);
+      const lo=parseFloat(result[0].x);
+      cs.lat=la; cs.lng=lo; cs.addr=addr;
+      if(r){r.className='addr-result show ok';r.textContent=`✓ ${result[0].address_name} (${la.toFixed(4)}, ${lo.toFixed(4)})`;}
+      // 지도 이동
+      if(kl&&km){
+        km.setCenter(new kakao.maps.LatLng(la,lo));
+        updateMap();
+      }
+    } else {
+      // 키워드 검색으로 재시도
+      const ps=new kakao.maps.services.Places();
+      ps.keywordSearch(addr,(result2,status2)=>{
+        if(status2===kakao.maps.services.Status.OK){
+          const la=parseFloat(result2[0].y);
+          const lo=parseFloat(result2[0].x);
+          cs.lat=la; cs.lng=lo; cs.addr=result2[0].place_name||addr;
+          if(r){r.className='addr-result show ok';r.textContent=`✓ ${result2[0].place_name} (${la.toFixed(4)}, ${lo.toFixed(4)})`;}
+          if(kl&&km){km.setCenter(new kakao.maps.LatLng(la,lo));updateMap();}
+        } else {
+          if(r){r.className='addr-result show err';r.textContent='✗ 주소를 찾을 수 없습니다. 더 구체적으로 입력해보세요.';}
+        }
+      });
+    }
+  });
+}
+
+function addKw(){if(!cs)return;const inp=document.getElementById('kw-inp');const v=inp.value.trim().replace(/^#/,'');if(!v)return;cs.keywords.push(v);inp.value='';rkr();}
+function delKw(i){if(!cs)return;cs.keywords.splice(i,1);rkr();}
+function rkr(){const row=document.getElementById('kw-row');if(!row)return;row.innerHTML=(cs.keywords||[]).map((k,i)=>`<span class="tag">#${k}${em?`<button class="tag-del" onclick="delKw(${i})">×</button>`:''}</span>`).join('');}
+function pickColor(col){if(!cc)return;cc.color=col;cc.spots.forEach(s=>{if(!s.isHub)s.color=col;});showCD();}
+function show(){document.getElementById('es').style.display='none';document.getElementById('dc').style.display='';document.getElementById('closeb').style.display='';}
+
+function toggleEdit(){
+  em=!em;
+  document.getElementById('eb').style.display=em?'none':'';
+  document.getElementById('sb2').style.display=em?'':'none';
+  document.getElementById('db2').style.display=em?'none':'';
+  if(cs)showSD();else showCD();
+}
+
+function saveEdit(){
+  const gv=(id,fb)=>{const el=document.getElementById(id);return el?el.value:fb;};
+  if(cs){
+    cs.name=gv('e-sname',cs.name);
+    cs.type=gv('e-stype',cs.type);
+    cs.desc=gv('e-sdesc',cs.desc);
+    cs.mission=gv('e-smission',cs.mission||'')||null;
+    cs.duration=gv('e-sdur',cs.duration);
+    const addrEl=document.getElementById('e-addr');
+    if(addrEl) cs.addr=addrEl.value;
+  }else if(cc){
+    cc.name=gv('e-name',cc.name);cc.desc=gv('e-desc',cc.desc);
+    cc.duration=gv('e-dur',cc.duration);cc.distance=gv('e-dist',cc.distance);cc.theme=gv('e-theme',cc.theme);
+  }
+  em=false;
+  document.getElementById('eb').style.display='';document.getElementById('sb2').style.display='none';document.getElementById('db2').style.display='';
+  document.getElementById('mt').textContent=cc.name;
+  rl();rsl();if(cs)showSD();else showCD();updateMap();
+}
+
+function closeDetail(){
+  cs=null;em=false;
+  document.getElementById('eb').style.display='none';document.getElementById('sb2').style.display='none';
+  document.getElementById('es').style.display='';document.getElementById('dc').style.display='none';document.getElementById('closeb').style.display='none';
+  document.getElementById('dtitle').textContent='상세 정보';rsl();
+}
+
+function moveSpot(id,dir){
+  if(!cc)return;const i=cc.spots.findIndex(s=>s.id===id);const ni=i+dir;
+  if(ni<0||ni>=cc.spots.length)return;
+  [cc.spots[i],cc.spots[ni]]=[cc.spots[ni],cc.spots[i]];
+  rsl();if(cs)showSD();else showCD();updateMap();
+}
+
+function showConfirm(title,msg,ok){
+  const d=document.createElement('div');d.className='ov';
+  d.innerHTML=`<div class="ob"><h4>${title}</h4><p>${msg}</p><div class="ob-btns"><button class="abtn" onclick="this.closest('.ov').remove()">취소</button><button class="abtn danger" id="co"><i class="ti ti-trash"></i> 삭제</button></div></div>`;
+  document.body.appendChild(d);d.querySelector('#co').onclick=()=>{d.remove();ok();};
+}
+
+function confDelC2(){if(cc)confDelC(cc.id);}
+function confDelC(id){
+  const c=DATA.courses.find(x=>x.id===id);if(!c)return;
+  showConfirm('코스 삭제',`"${c.name}" 코스를 삭제할까요?`,()=>{
+    DATA.courses=DATA.courses.filter(x=>x.id!==id);
+    if(cc&&cc.id===id){cc=null;cs=null;document.getElementById('mt').textContent='코스를 선택하세요';['eb','sb2','db2'].forEach(i=>document.getElementById(i).style.display='none');document.getElementById('es').style.display='';document.getElementById('dc').style.display='none';document.getElementById('closeb').style.display='none';}
+    rl();rsl();updateMap();
+  });
+}
+function confDelS(id){
+  const s=cc.spots.find(x=>x.id===id);if(!s)return;
+  showConfirm('지점 삭제',`"${s.name}" 지점을 삭제할까요?`,()=>{
+    cc.spots=cc.spots.filter(x=>x.id!==id);
+    if(cs&&cs.id===id){cs=null;document.getElementById('es').style.display='';document.getElementById('dc').style.display='none';document.getElementById('closeb').style.display='none';}
+    rsl();updateMap();
+  });
+}
+
+function handleAdd(){
+  if(tab==='courses'){
+    const name=prompt('새 코스 이름:');if(!name)return;
+    DATA.courses.push({id:'c'+Date.now(),name,badge:'b-custom',badgeText:'신규',color:'#888780',isNew:true,desc:'',duration:'미정',distance:'미정',difficulty:'미정',theme:'',spots:[]});
+    rl();
+  }else{
+    if(!cc){alert('코스를 먼저 선택하세요');return;}
+    const name=prompt('새 지점 이름:');if(!name)return;
+    cc.spots.push({id:'sp'+Date.now(),name,type:'미분류',color:cc.color,lat:0,lng:0,addr:'',isHub:false,desc:'',duration:'미정',mission:null,keywords:[]});
+    rsl();
+  }
+}
+
+function updateMap(){
+  if(!kl||!km)return;
+  mkrs.forEach(m=>m.setMap(null));mkrs=[];
+  if(!cc||!cc.spots.length)return;
+  const valid=cc.spots.filter(s=>s.lat&&s.lng);
+  valid.forEach((s,i)=>{
+    const idx=cc.spots.indexOf(s);
+    const pos=new kakao.maps.LatLng(s.lat,s.lng);
+    const mk=new kakao.maps.Marker({position:pos,map:km});
+    const iw=new kakao.maps.InfoWindow({content:`<div style="padding:6px 10px;font-size:12px;font-weight:600;">${idx+1}. ${s.name}</div>`});
+    kakao.maps.event.addListener(mk,'click',()=>{iw.open(km,mk);selSpot(s.id);if(tab!=='spots')switchTab('spots');});
+    mkrs.push(mk);
+  });
+  if(valid.length>0) km.setCenter(new kakao.maps.LatLng(valid[0].lat,valid[0].lng));
+}
+
+function applyKey(){
+  const key=document.getElementById('kk').value.trim();
+  if(!key){alert('API 키를 입력해주세요');return;}
+  if(kl){if(cc)updateMap();return;}
+  const sc=document.createElement('script');
+  sc.src=`//dapi.kakao.com/v2/maps/sdk.js?appkey=${key}&autoload=false&libraries=services`;
+  sc.onload=()=>{
+    kakao.maps.load(()=>{
+      kl=true;
+      geocoder=new kakao.maps.services.Geocoder();
+      document.getElementById('map-ph').style.display='none';
+      document.getElementById('api-ok').style.display='flex';
+      km=new kakao.maps.Map(document.getElementById('map-container'),{
+        center:new kakao.maps.LatLng(35.3057,128.5197),level:4
+      });
+      if(cc)updateMap();
+    });
+  };
+  sc.onerror=()=>alert('API 키 오류입니다.\n카카오 Developers → 플랫폼 키 → JS Key → 수정 → JavaScript SDK 도메인을 확인해주세요.');
+  document.head.appendChild(sc);
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+init();
+</script>
+</body>
+</html>
